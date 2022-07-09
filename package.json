@@ -1,0 +1,23 @@
+{
+  "name": "beta-react-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2205-6/beta-react-sdk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/2205-6/beta-react-sdk/issues"
+  },
+  "homepage": "https://github.com/2205-6/beta-react-sdk#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "react": "^18.2.0"
+  }
+}
