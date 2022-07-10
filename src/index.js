@@ -1,3 +1,5 @@
-const Client = require('../lib/Client.js');
-const Config = require('../lib/Config.js');
-module.exports = { Client, Config };
+import Client from '../lib/Client.js';
+import Config from '../lib/Config.js';
+import { Provider, Context } from '../lib/Provider.js';
+
+module.exports = { Client, Config, Provider, Context };

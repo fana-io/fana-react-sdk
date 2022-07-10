@@ -33,6 +33,7 @@ Provider is responsible for:
   - Sovereign processes User Object and returns an evaluation object
   - Client object processes evaluation data and stores it
 - Provider also sets up SSE to listen for messages from Sovereign's streaming endpoint
+- Developer can now access the SDK Client and its methods via the useContext() hook
 
 ## When an event is pushed
 All of the following occurs within the <Provider> component's SSE listener.
