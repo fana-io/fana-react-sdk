@@ -6,13 +6,13 @@ The React SDK is to be used within the developer's application code. There are 3
 
 ## Client
 The Client is responsible for:
-- Initializing connection with Sovereign
+- Initializing connection with Bearer
 - Fetching and storing evaluation data
 - Returning boolean when a flag needs to be evaluated (evaluateFlag())
 
 ## Config
 Config is responsible for:
-- Storing configuration details (SDK key, Sovereign address, user context object)
+- Storing configuration details (SDK key, Bearer address, user context object)
 - Instantiating the Client object
 - Invoking the initial connection on the Client
 
@@ -22,17 +22,17 @@ Provider is responsible for:
 - Creating the React Context (this provides the Client object to all children so they have access to eval method)
 - Starting the connection via the Config
 - Determining whether the Client is ready (considering moving this logic to the Client instead)
-- Setting up the SSE connection with Sovereign
+- Setting up the SSE connection with Bearer
 
 ## How it works
-- Developer starts by creating the Config object and passes in the SDK key, Sovereign Address, and User Object
+- Developer starts by creating the Config object and passes in the SDK key, Bearer Address, and User Object
 - They wrap their main App component in the <Provider> component, passing in the newly created Config object
 - The Provider component will call Config.connect(). This cascades into a series of steps:
   - Client object is created
-  - Client object makes POST request to Sovereign, passing along SDK key and User Object
-  - Sovereign processes User Object and returns an evaluation object
+  - Client object makes POST request to Bearer, passing along SDK key and User Object
+  - Bearer processes User Object and returns an evaluation object
   - Client object processes evaluation data and stores it
-- Provider also sets up SSE to listen for messages from Sovereign's streaming endpoint
+- Provider also sets up SSE to listen for messages from Bearer's streaming endpoint
 - Developer can now access the SDK Client and its methods via the useContext() hook
 
 ## When an event is pushed
