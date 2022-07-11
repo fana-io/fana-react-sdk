@@ -1,6 +1,6 @@
-import Client from '../lib/Client.js';
-import Config from '../lib/Config.js';
-import { Provider, Context } from '../lib/Provider.js';
+import Client from 'beta-react-sdk/lib/Client.js';
+import Config from 'beta-react-sdk/lib/Config.js';
+import { Provider, Context } from 'beta-react-sdk/lib/Provider.js';
 export default {
   Client,
   Config,
