@@ -1,4 +1,4 @@
-import Client from 'f-beta-react-sdk/lib/Client.js'
+import Client from './Client.js'
 
 export default class Config {
   constructor(sdkKey, bearerAddress, userContext) {
@@ -9,13 +9,14 @@ export default class Config {
   }
 
   async connect() {
+    const client = new Client(this);
     try {
-      const client = new Client(this);
       // get eval object
       await client.getEvals();
       return client;
     } catch (e) {
       console.log('connection failed')
+      return client;
     }
   }
 

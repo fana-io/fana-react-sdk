@@ -42,10 +42,7 @@ export const Provider = ({ children, config }) => {
       //   const newFlags = streamedData.message;
       //   console.log("NEW FLAGS", newFlags)
       // process new flags in array
-      const newFlags = streamedData.flags;
-      newFlags.forEach(flag => {
-        newClient.setEval(flag.flagKey, flag.value)
-      })
+      newClient.setEval(streamedData.key, streamedData.status)
 
       // update the sdkClient, triggering a state update
       setSdkClient(newClient);
