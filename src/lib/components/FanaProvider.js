@@ -24,15 +24,22 @@ export const FanaProvider = ({ children, config }) => {
       console.log('SSE connection established');
     };
 
+    eventSource.onmessage = (e) => {
+      console.log('message received', e.data)
+    }
+
     eventSource.addEventListener(config.sdkKey, (e) => {
+      console.log('received toggle off', e.data);
       const newClient = Object.assign(
         Object.create(Object.getPrototypeOf(sdkClient)),
         sdkClient
       );
 
       const streamedData = JSON.parse(e.data);
-
-      newClient.setEval(streamedData.key, streamedData.status)
+      
+      for (let flag in streamedData) {
+        newClient.setEval(flag, streamedData[flag].status)
+      }
 
       setSdkClient(newClient);
     })
