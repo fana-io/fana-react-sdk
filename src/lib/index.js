@@ -1,9 +1,9 @@
-import Client from './Client.js';
-import Config from './Config.js';
-import { Provider, Context } from './components/Provider.js';
+import FanaClient from './FanaClient.js';
+import FanaConfig from './FanaConfig.js';
+import { FanaProvider, FanaContext } from './components/FanaProvider.js';
 export {
-  Client,
-  Config,
-  Provider,
-  Context
+  FanaClient,
+  FanaConfig,
+  FanaProvider,
+  FanaContext
 };
