@@ -41,8 +41,8 @@ export const FanaProvider = ({ children, config }) => {
   if (!clientReady) return null;
 
   return (
-    <Context.Provider value={sdkClient}>
+    <FanaContext.Provider value={sdkClient}>
       {children}
-    </Context.Provider>
+    </FanaContext.Provider>
   )
 }
