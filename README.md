@@ -1,44 +1,53 @@
-The React SDK is to be used within the developer's application code. There are 3 primary pieces to it:
+# Using the React SDK
 
-1. Client
-2. Config
-3. Provider Component
+1. Install the Fana React SDK in your project by running `npm i fana-react-sdk`
+2. Import the following files into your React project's `App.js` file
 
-## Client
-The Client is responsible for:
-- Initializing connection with Bearer
-- Fetching and storing evaluation data
-- Returning boolean when a flag needs to be evaluated (evaluateFlag())
+`import { FanaConfig, FanaProvider } from 'fana-react-sdk'`
 
-## Config
-Config is responsible for:
-- Storing configuration details (SDK key, Bearer address, user context object)
-- Instantiating the Client object
-- Invoking the initial connection on the Client
+3. Use the `FanaSDK`'s `FanaConfig` class constructor to instantiate a `config` object. This constructor takes three arguments:
 
-## Provider Component
-Provider is responsible for:
-- Holding and passing along the Client as part of its state
-- Creating the React Context (this provides the Client object to all children so they have access to eval method)
-- Starting the connection via the Config
-- Determining whether the Client is ready (considering moving this logic to the Client instead)
-- Setting up the SSE connection with Bearer
+- **SDK key** (from your dashboard's settings page)
+- The **address** of your Flag Bearer
+- **User Context**: This is an object containing the attributes pertaining to the current user
 
-## How it works
-- Developer starts by creating the Config object and passes in the SDK key, Bearer Address, and User Object
-- They wrap their main App component in the <Provider> component, passing in the newly created Config object
-- The Provider component will call Config.connect(). This cascades into a series of steps:
-  - Client object is created
-  - Client object makes POST request to Bearer, passing along SDK key and User Object
-  - Bearer processes User Object and returns an evaluation object
-  - Client object processes evaluation data and stores it
-- Provider also sets up SSE to listen for messages from Bearer's streaming endpoint
-- Developer can now access the SDK Client and its methods via the useContext() hook
+```javascript
+const config = new FanaConfig('sdk_key_0', 'http://localhost:3001', { userId: 'jjuy', beta: true })
+                                   ^SDK Key     ^Flag Bearer Address      ^User Context Object
+```
 
-## When an event is pushed
-All of the following occurs within the <Provider> component's SSE listener.
-- Creates a deep copy of the existing SDK Client (since we shouldn't mutate state objects)
-- Parses the pushed data
-- Checks to make sure the "type" is the current SDK key. If not, ignores this message
-  - If SDK key matches, set the flag to the new value
-- Sets new client object in the state, triggering a render to reflect the update
+4. Next, wrap your outermost component in the `<FanaProvider>` component. You will pass in your newly created `config` instance as an argument to the `config` prop.
+
+```jsx
+function App() {
+  return (
+    <FanaProvider config={config}>
+      <main>
+        <Header />
+        <Body />
+      </main>
+    </FanaProvider>
+  );
+}
+```
+
+Now you can evaluate flags in any component you wish! Make sure to import React's `useContext` hook, as well as the `FanaContext`.
+
+Within your component, import React's `useContext` as well as Fana's `FanaContext`. Invoke `useContext(FanaContext)`. This will provide you with the client instance which has access to the `evaluateFlag` method.
+
+```javascript
+const fanaClient = useContext(FanaContext);
+const betaHeader = fanaClient.evaluateFlag("beta_header", true);
+```
+
+The `evaluateFlag` method takes two arguments: the flag key that you wish to evaluate, and an optional argument for a default value.
+
+The optional argument will be false if no value is provided. This optional argument will only apply in cases where it cannot determine the value of the provided flag key. This may happen when connection with the Flag Bearer fails, or if the flag key simply does not exist.
+
+`evaluateFlag` returns `true` or `false` depending on how the user context was evaluated. Use this to determine what experience this particular user should receive.
+
+```jsx
+const experienceText = betaHeader ? "beta" : "regular";
+
+return <h1>Welcome to the {experienceText} experience!</h1>;
+```
