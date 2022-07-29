@@ -18,31 +18,39 @@ export const FanaProvider = ({ children, config }) => {
   useEffect(() => {
     if (!clientReady) return;
 
-    let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${sdkClient.config.sdkKey}`);
+    let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
+    addEventSourceListeners(eventSource);
 
-    eventSource.onopen = () => {
-      console.log('SSE connection established');
-    };
+    const addEventSourceListeners = (es) => {
+      es.onopen = () => {
+        console.log('SSE connection established');
+      };
 
-    eventSource.onmessage = (e) => {
-      console.log('message received', e.data)
-    }
-
-    eventSource.addEventListener(config.sdkKey, (e) => {
-      console.log('received toggle off', e.data);
-      const newClient = Object.assign(
-        Object.create(Object.getPrototypeOf(sdkClient)),
-        sdkClient
-      );
-
-      const streamedData = JSON.parse(e.data);
-      
-      for (let flag in streamedData) {
-        newClient.setEval(flag, streamedData[flag].status)
+      es.onmessage = (e) => {
+        console.log('message received', e.data)
       }
 
-      setSdkClient(newClient);
-    })
+      es.onclose = () => {
+        let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
+        addEventSourceListeners(eventSource);
+      }
+
+      es.addEventListener(config.sdkKey, (e) => {
+        console.log('received toggle off', e.data);
+        const newClient = Object.assign(
+          Object.create(Object.getPrototypeOf(sdkClient)),
+          sdkClient
+        );
+
+        const streamedData = JSON.parse(e.data);
+
+        for (let flag in streamedData) {
+          newClient.setEval(flag, streamedData[flag].status)
+        }
+
+        setSdkClient(newClient);
+      })
+    }
   }, [clientReady]);
 
   if (!clientReady) return null;
