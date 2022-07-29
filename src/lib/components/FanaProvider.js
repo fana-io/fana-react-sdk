@@ -18,9 +18,6 @@ export const FanaProvider = ({ children, config }) => {
   useEffect(() => {
     if (!clientReady) return;
 
-    let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
-    addEventSourceListeners(eventSource);
-
     const addEventSourceListeners = (es) => {
       es.onopen = () => {
         console.log('SSE connection established');
@@ -31,6 +28,7 @@ export const FanaProvider = ({ children, config }) => {
       }
 
       es.onclose = () => {
+        console.log('event source closed');
         let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
         addEventSourceListeners(eventSource);
       }
@@ -51,6 +49,9 @@ export const FanaProvider = ({ children, config }) => {
         setSdkClient(newClient);
       })
     }
+
+    let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
+    addEventSourceListeners(eventSource);
   }, [clientReady]);
 
   if (!clientReady) return null;

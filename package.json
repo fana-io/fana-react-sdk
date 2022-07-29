@@ -1,6 +1,6 @@
 {
   "name": "f-beta-react-sdk",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Beta client-side SDK for React JS",
   "main": "dist/index.js",
   "module": "dist/index.js",
