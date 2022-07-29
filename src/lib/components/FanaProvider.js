@@ -5,6 +5,7 @@ export const FanaContext = React.createContext();
 export const FanaProvider = ({ children, config }) => {
   const [sdkClient, setSdkClient] = useState(undefined);
   const [clientReady, setClientReady] = useState(false);
+  const [activeEventSource, setActiveEventSource] = useState(false);
 
   useEffect(() => {
     const connect = async() => {
@@ -20,7 +21,14 @@ export const FanaProvider = ({ children, config }) => {
 
     const addEventSourceListeners = (es) => {
       es.onopen = () => {
-        console.log('SSE connection established');
+        if (activeEventSource) {
+          console.log('SSE connection already exists; closing this one');
+          console.log(activeEventSource);
+          es.close();
+        } else {
+          console.log('SSE connection established');
+          setActiveEventSource(true);
+        }
       };
 
       es.onmessage = (e) => {
@@ -29,12 +37,14 @@ export const FanaProvider = ({ children, config }) => {
 
       es.onclose = () => {
         console.log('event source closed');
+        setActiveEventSource(false);
         let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
         addEventSourceListeners(eventSource);
       }
 
       es.onerror = () => {
         console.log('event source error');
+        setActiveEventSource(false);
         let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
         addEventSourceListeners(eventSource);
       }
