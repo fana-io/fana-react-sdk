@@ -33,6 +33,12 @@ export const FanaProvider = ({ children, config }) => {
         addEventSourceListeners(eventSource);
       }
 
+      es.onerror = () => {
+        console.log('event source error');
+        let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
+        addEventSourceListeners(eventSource);
+      }
+
       es.addEventListener(config.sdkKey, (e) => {
         console.log('received toggle off', e.data);
         const newClient = Object.assign(
