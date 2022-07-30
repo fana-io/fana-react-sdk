@@ -5,7 +5,6 @@ export const FanaContext = React.createContext();
 export const FanaProvider = ({ children, config }) => {
   const [sdkClient, setSdkClient] = useState(undefined);
   const [clientReady, setClientReady] = useState(false);
-  const [activeEventSource, setActiveEventSource] = useState(false);
 
   useEffect(() => {
     const connect = async() => {
@@ -21,36 +20,14 @@ export const FanaProvider = ({ children, config }) => {
 
     const addEventSourceListeners = (es) => {
       es.onopen = () => {
-        if (activeEventSource) {
-          console.log('SSE connection already exists; closing this one');
-          console.log(activeEventSource);
-          es.close();
-        } else {
-          console.log('SSE connection established');
-          setActiveEventSource(true);
-        }
+        console.log('SSE connection established');
       };
 
       es.onmessage = (e) => {
         console.log('message received', e.data)
       }
 
-      es.onclose = () => {
-        console.log('event source closed');
-        setActiveEventSource(false);
-        let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
-        addEventSourceListeners(eventSource);
-      }
-
-      es.onerror = () => {
-        console.log('event source error');
-        setActiveEventSource(false);
-        let eventSource = new EventSource(`${config.bearerAddress}/stream/client?sdkKey=${config.sdkKey}`);
-        addEventSourceListeners(eventSource);
-      }
-
       es.addEventListener(config.sdkKey, (e) => {
-        console.log('received toggle off', e.data);
         const newClient = Object.assign(
           Object.create(Object.getPrototypeOf(sdkClient)),
           sdkClient

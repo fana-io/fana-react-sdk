@@ -1,7 +1,7 @@
 {
-  "name": "f-beta-react-sdk",
-  "version": "1.0.20",
-  "description": "Beta client-side SDK for React JS",
+  "name": "fana-react-sdk",
+  "version": "1.0.0",
+  "description": "Client-side React SDK for Fana",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "keywords": [
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/2205-6/beta-react-sdk.git"
+    "url": "git+https://github.com/fana-io/fana-react-sdk.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/2205-6/beta-react-sdk/issues"
+    "url": "https://github.com/fana-io/fana-react-sdk/issues"
   },
-  "homepage": "https://github.com/2205-6/beta-react-sdk#readme",
+  "homepage": "https://github.com/fana-io/fana-react-sdk#readme",
   "dependencies": {
     "axios": "^0.27.2"
   },
