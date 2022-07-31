@@ -6,22 +6,34 @@ export const FanaProvider = ({ children, config }) => {
   const [sdkClient, setSdkClient] = useState(undefined);
   const [clientReady, setClientReady] = useState(false);
 
+  const attemptLimit = 3;
+
   useEffect(() => {
-    const connect = async() => {
+    const initialize = async() => {
       const client = await config.connect();
       setSdkClient(client);
       setClientReady(true);
     }
-    connect();
+    initialize();
   }, [])
 
   useEffect(() => {
     if (!clientReady) return;
 
+    let attempts = 0;
+
     const addEventSourceListeners = (es) => {
       es.onopen = () => {
         console.log('SSE connection established');
       };
+
+      es.onerror = () => {
+        if (attempts === attemptLimit) {
+          es.close();
+        } else {
+          attempts++;
+        }
+      }
 
       es.onmessage = (e) => {
         console.log('message received', e.data)
