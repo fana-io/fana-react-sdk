@@ -25,6 +25,7 @@ export const FanaProvider = ({ children, config }) => {
     const addEventSourceListeners = (es) => {
       es.onopen = () => {
         console.log('SSE connection established');
+        attempts = 0;
       };
 
       es.onerror = () => {
